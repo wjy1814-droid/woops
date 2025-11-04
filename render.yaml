@@ -1,0 +1,32 @@
+services:
+  # Web Service (Backend + Frontend)
+  - type: web
+    name: woops
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: memo_app
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+databases:
+  - name: memo-app-db
+    databaseName: memo_app
+    user: memo_app_user
+    region: singapore
+    plan: free
+
