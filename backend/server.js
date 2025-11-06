@@ -17,7 +17,12 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 const db = require('./database');
 
 // API 라우트
+const authRoutes = require('./routes/auth');
+const groupRoutes = require('./routes/groups');
 const memoRoutes = require('./routes/memos');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/groups', groupRoutes);
 app.use('/api/memos', memoRoutes);
 
 // 프론트엔드 라우트 (모든 경로를 index.html로)

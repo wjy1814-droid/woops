@@ -7,29 +7,83 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="sky-background">
-        <!-- 메모 작성 영역 (위쪽) -->
-        <div class="memo-input-container">
-            <h1 class="app-title">☁️ 구름 메모장 ☁️</h1>
-            <div class="input-wrapper">
-                <textarea 
-                    id="memoInput" 
-                    placeholder="메모를 작성하세요..."
-                    rows="3"
-                ></textarea>
-                <div class="button-group">
-                    <button id="addMemoBtn" class="btn btn-add">메모 추가</button>
-                    <button id="cancelBtn" class="btn btn-cancel" style="display: none;">취소</button>
-                </div>
+    <!-- 인증 화면 -->
+    <div id="authScreen" class="auth-screen" style="display: none;">
+        <div class="auth-container">
+            <h1>☁️ 구름 메모장</h1>
+            <div class="auth-tabs">
+                <button id="loginTab" class="auth-tab active">로그인</button>
+                <button id="registerTab" class="auth-tab">회원가입</button>
             </div>
-        </div>
-
-        <!-- 메모 표시 영역 (구름 형태) -->
-        <div class="memo-container" id="memoContainer">
-            <!-- 메모들이 여기에 동적으로 추가됩니다 -->
+            
+            <!-- 로그인 폼 -->
+            <form id="loginForm" class="auth-form">
+                <input type="email" id="loginEmail" placeholder="이메일" required>
+                <input type="password" id="loginPassword" placeholder="비밀번호" required>
+                <button type="submit" class="auth-btn">로그인</button>
+            </form>
+            
+            <!-- 회원가입 폼 -->
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <input type="text" id="registerUsername" placeholder="사용자명" required>
+                <input type="email" id="registerEmail" placeholder="이메일" required>
+                <input type="password" id="registerPassword" placeholder="비밀번호 (최소 6자)" required>
+                <button type="submit" class="auth-btn">회원가입</button>
+            </form>
+            
+            <p class="auth-message" id="authMessage"></p>
         </div>
     </div>
 
+    <!-- 메인 앱 화면 -->
+    <div id="appScreen" class="sky-background" style="display: none;">
+        <!-- 상단 네비게이션 -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <h1 class="app-title">☁️ 구름 메모장</h1>
+            </div>
+            <div class="navbar-right">
+                <span id="usernameDisplay"></span>
+                <button id="groupsBtn" class="nav-btn">그룹</button>
+                <button id="logoutBtn" class="nav-btn">로그아웃</button>
+            </div>
+        </nav>
+
+        <!-- 그룹 화면 -->
+        <div id="groupsScreen" style="display: none;">
+            <div class="groups-container">
+                <h2>내 그룹</h2>
+                <button id="createGroupBtn" class="btn">새 그룹 만들기</button>
+                <div id="groupsList"></div>
+            </div>
+            <button id="backToMemosBtn" class="btn">메모로 돌아가기</button>
+        </div>
+
+        <!-- 메모 작성 영역 (위쪽) -->
+        <div id="memosScreen">
+            <div class="memo-input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="memoInput" 
+                        placeholder="메모를 작성하세요..."
+                        rows="3"
+                    ></textarea>
+                    <div class="button-group">
+                        <button id="addMemoBtn" class="btn btn-add">메모 추가</button>
+                        <button id="cancelBtn" class="btn btn-cancel" style="display: none;">취소</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 메모 표시 영역 (구름 형태) -->
+            <div class="memo-container" id="memoContainer">
+                <!-- 메모들이 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="groups.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -49,10 +49,52 @@ const initializeDatabase = async () => {
         await pool.query('SELECT NOW()');
         console.log('✅ 데이터베이스 연결 테스트 성공!');
         
+        // users 테이블 생성
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                username VARCHAR(100) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        console.log('✅ 사용자 테이블이 준비되었습니다.');
+        
+        // groups 테이블 생성
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS groups (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                description TEXT,
+                owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        console.log('✅ 그룹 테이블이 준비되었습니다.');
+        
+        // group_members 테이블 생성
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS group_members (
+                id SERIAL PRIMARY KEY,
+                group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                role VARCHAR(20) DEFAULT 'member',
+                joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(group_id, user_id)
+            );
+        `);
+        console.log('✅ 그룹 멤버 테이블이 준비되었습니다.');
+        
+        // memos 테이블 생성 (user_id와 group_id 추가)
         const createTableQuery = `
             CREATE TABLE IF NOT EXISTS memos (
                 id SERIAL PRIMARY KEY,
                 content TEXT NOT NULL,
+                user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
