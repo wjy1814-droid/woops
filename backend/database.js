@@ -11,10 +11,12 @@ console.log('DB_PASSWORD:', process.env.DB_PASSWORD ? '설정됨' : '설정되�
 
 // PostgreSQL 연결 풀 생성
 // DATABASE_URL 환경 변수가 있으면 우선 사용 (클라우드 배포용)
+// 클라우드 타입 내부 네트워크는 SSL 불필요
 const pool = process.env.DATABASE_URL 
     ? new Pool({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
+        // 내부 서비스(postgresql)는 SSL 불필요, 외부 URL은 SSL 사용
+        ssl: process.env.DATABASE_URL.includes('postgresql:5432') ? false : {
             rejectUnauthorized: false
         }
     })
@@ -24,7 +26,7 @@ const pool = process.env.DATABASE_URL
         database: process.env.DB_NAME || 'memo_app',
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '',
-        ssl: process.env.DB_HOST && process.env.DB_HOST !== 'localhost' ? {
+        ssl: process.env.DB_HOST && process.env.DB_HOST !== 'localhost' && !process.env.DB_HOST.includes('postgresql') ? {
             rejectUnauthorized: false
         } : false
     });
